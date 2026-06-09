@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CurriculumFlow — Meaningful Beginnings</title>
+<style>
+:root {
+  --slate-900:#0F172A;--slate-800:#1E293B;--slate-700:#334155;
+  --slate-500:#64748B;--slate-300:#CBD5E1;--slate-200:#E2E8F0;
+  --slate-100:#F1F5F9;--slate-50:#F8FAFC;--paper:#F8F7F4;
+  --sage:#4CAF85;--sage-light:#D1FAE5;--sage-dark:#059669;
+  --amber:#F59E0B;--amber-light:#FEF3C7;--amber-dark:#D97706;
+  --violet:#8B5CF6;--violet-light:#EDE9FE;--violet-dark:#7C3AED;
+  --rose:#F43F5E;--rose-light:#FFE4E6;
+  --sky:#0EA5E9;--sky-light:#E0F2FE;--white:#FFFFFF;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--paper);color:var(--slate-800);height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+
+/* TOP BAR */
+.topbar{background:var(--slate-800);color:white;padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:100;gap:12px;}
+.topbar-brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px;letter-spacing:.02em;white-space:nowrap;}
+.brand-dot{width:8px;height:8px;border-radius:50%;background:var(--sage);}
+.topbar-cycle{display:flex;align-items:center;gap:0;background:rgba(255,255,255,.06);border-radius:7px;padding:3px 5px;font-size:11px;}
+.cycle-step{padding:3px 8px;border-radius:4px;color:var(--slate-300);display:flex;align-items:center;gap:4px;white-space:nowrap;}
+.cycle-step.sage{background:rgba(76,175,133,.2);color:#6EDBA8;}
+.cycle-step.amber{background:rgba(245,158,11,.2);color:#FCD34D;}
+.cycle-step.violet{background:rgba(139,92,246,.2);color:#C4B5FD;}
+.cycle-arrow{color:var(--slate-500);padding:0 2px;font-size:11px;}
+.step-date{font-weight:700;}
+.topbar-classroom{display:flex;align-items:center;gap:8px;white-space:nowrap;}
+.classroom-badge{background:rgba(255,255,255,.1);border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;color:white;border:1px solid rgba(255,255,255,.15);}
+.site-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;}
+
+/* LAYOUT */
+.app-body{display:flex;flex:1;overflow:hidden;}
+
+/* SIDEBAR */
+.sidebar{width:210px;background:var(--white);border-right:1px solid var(--slate-200);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;}
+.sidebar-section{padding:14px 10px 6px;}
+.sidebar-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--slate-500);padding:0 8px 6px;}
+.nav-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:7px;cursor:pointer;font-size:13px;font-weight:500;color:var(--slate-700);transition:background .15s,color .15s;margin-bottom:1px;}
+.nav-item:hover{background:var(--slate-100);}
+.nav-item.active{background:var(--sage-light);color:var(--sage-dark);}
+.nav-item.active-violet{background:var(--violet-light);color:var(--violet-dark);}
+.nav-icon{font-size:15px;width:18px;text-align:center;}
+.nav-badge{margin-left:auto;background:var(--rose);color:white;font-size:10px;font-weight:700;padding:1px 5px;border-radius:99px;}
+.sidebar-divider{border:none;border-top:1px solid var(--slate-100);margin:6px 10px;}
+
+/* CLASSROOM LIST in sidebar */
+.classroom-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:7px;cursor:pointer;font-size:12.5px;font-weight:500;color:var(--slate-700);transition:background .15s;margin-bottom:1px;}
+.classroom-item:hover{background:var(--slate-100);}
+.classroom-item.active-room{background:var(--sage-light);color:var(--sage-dark);font-weight:700;}
+.room-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.room-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.room-age{font-size:10px;color:var(--slate-500);white-space:nowrap;}
+.site-header-row{display:flex;align-items:center;gap:6px;padding:8px 10px 4px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate-500);}
+.site-color-bar{width:3px;height:12px;border-radius:2px;}
+
+/* MAIN */
+.main{flex:1;overflow-y:auto;padding:20px 24px;}
+
+/* PAGE HEADER */
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;}
+.page-title{font-size:20px;font-weight:700;color:var(--slate-900);}
+.page-subtitle{font-size:12px;color:var(--slate-500);margin-top:2px;}
+
+/* BUTTONS */
+.btn{padding:7px 14px;border-radius:7px;border:none;cursor:pointer;font-size:12.5px;font-weight:600;display:inline-flex;align-items:center;gap:5px;transition:all .15s;}
+.btn-primary{background:var(--sage);color:white;}.btn-primary:hover{background:var(--sage-dark);}
+.btn-violet{background:var(--violet);color:white;}.btn-violet:hover{background:var(--violet-dark);}
+.btn-amber{background:var(--amber);color:white;}.btn-amber:hover{background:var(--amber-dark);}
+.btn-outline{background:white;color:var(--slate-700);border:1.5px solid var(--slate-300);}.btn-outline:hover{background:var(--slate-100);}
+.btn-sm{padding:5px 10px;font-size:11.5px;}
+.btn-ghost{background:none;border:none;cursor:pointer;color:var(--slate-500);font-size:12px;padding:4px 8px;border-radius:5px;font-family:inherit;}.btn-ghost:hover{background:var(--slate-100);}
+
+/* ALERTS */
+.alert{display:flex;align-items:center;gap:12px;padding:11px 15px;border-radius:9px;margin-bottom:18px;font-size:12.5px;}
+.alert-amber{background:var(--amber-light);border:1px solid #FDE68A;color:#92400E;}
+.alert-sage{background:var(--sage-light);border:1px solid #A7F3D0;color:#065F46;}
+.alert-violet{background:var(--violet-light);border:1px solid #DDD6FE;color:#4C1D95;}
+.alert-icon{font-size:17px;}.alert-text{flex:1;}
+.alert-title{font-weight:700;margin-bottom:1px;}
+
+/* CALENDAR */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;}
+.cal-day-header{text-align:center;font-size:10px;font-weight:700;color:var(--slate-500);letter-spacing:.05em;text-transform:uppercase;padding-bottom:5px;}
+.cal-cell{min-height:82px;background:white;border-radius:7px;padding:7px;border:1.5px solid transparent;transition:border-color .15s;cursor:default;}
+.cal-cell:hover{border-color:var(--slate-300);}
+.cal-cell.other-month{background:var(--slate-100);opacity:.5;}
+.cal-cell.today{border-color:var(--sage)!important;}
+.cal-cell.deadline-sel{border-color:var(--amber)!important;background:#FFFBF0;}
+.cal-cell.deadline-tracker{border-color:var(--violet)!important;background:#FAFAFE;}
+.cal-cell.procurement-day{border-color:var(--sky)!important;background:var(--sky-light);}
+.cal-num{font-size:12px;font-weight:600;color:var(--slate-700);margin-bottom:3px;}
+.cal-cell.today .cal-num{background:var(--sage);color:white;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;}
+.cal-tag{font-size:10px;font-weight:600;padding:2px 5px;border-radius:3px;margin-bottom:2px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tag-amber{background:var(--amber-light);color:#92400E;}
+.tag-violet{background:var(--violet-light);color:#5B21B6;}
+.tag-sky{background:var(--sky-light);color:#0369A1;}
+.tag-sage{background:var(--sage-light);color:#065F46;}
+
+/* WEEK ROWS */
+.week-rows{display:flex;flex-direction:column;gap:7px;margin-top:14px;}
+.week-row{background:white;border-radius:8px;border:1.5px solid var(--slate-100);padding:10px 14px;display:flex;align-items:center;gap:10px;}
+.week-label{font-size:11.5px;font-weight:700;color:var(--slate-500);min-width:90px;}
+.theme-pill{display:flex;align-items:center;gap:5px;background:var(--sage-light);border-radius:5px;padding:4px 9px;font-size:12px;font-weight:600;color:var(--sage-dark);cursor:pointer;border:1.5px solid transparent;transition:all .15s;}
+.theme-pill:hover{border-color:var(--sage);}
+.theme-pill.empty{background:var(--slate-100);color:var(--slate-500);border:1.5px dashed var(--slate-300);}
+.theme-pill.empty:hover{border-color:var(--sage);background:var(--sage-light);color:var(--sage-dark);}
+
+/* LIBRARY */
+.library-filters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px;}
+.filter-chip{padding:5px 12px;border-radius:99px;font-size:11.5px;font-weight:600;cursor:pointer;border:1.5px solid var(--slate-200);background:white;color:var(--slate-600);transition:all .15s;}
+.filter-chip:hover,.filter-chip.active{background:var(--slate-800);color:white;border-color:var(--slate-800);}
+.library-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;}
+.theme-card{background:white;border-radius:10px;padding:14px;border:1.5px solid var(--slate-100);cursor:pointer;transition:all .15s;position:relative;overflow:hidden;}
+.theme-card:hover{border-color:var(--sage);transform:translateY(-1px);box-shadow:0 4px 14px rgba(76,175,133,.1);}
+.theme-card.selected{border-color:var(--sage);background:linear-gradient(135deg,#F0FDF8 0%,white 60%);}
+.theme-card-accent{width:4px;height:100%;position:absolute;left:0;top:0;border-radius:10px 0 0 10px;}
+.theme-emoji{font-size:24px;margin-bottom:6px;}
+.theme-name{font-size:13px;font-weight:700;color:var(--slate-800);margin-bottom:3px;}
+.theme-desc{font-size:11.5px;color:var(--slate-500);line-height:1.4;margin-bottom:8px;}
+.theme-select-btn{margin-top:8px;width:100%;padding:5px;border-radius:5px;border:1.5px solid var(--slate-200);background:white;cursor:pointer;font-size:11.5px;font-weight:600;color:var(--slate-600);transition:all .15s;font-family:inherit;}
+.theme-select-btn:hover{background:var(--sage-light);border-color:var(--sage);color:var(--sage-dark);}
+.theme-select-btn.selected{background:var(--sage);border-color:var(--sage);color:white;}
+
+/* ACTIVITY TRACKER */
+.week-tracker-card{background:white;border-radius:10px;border:1.5px solid var(--slate-100);margin-bottom:12px;overflow:hidden;}
+.week-tracker-card.pending{border-left:4px solid var(--amber);}
+.week-tracker-card.ready{border-left:4px solid var(--sage);}
+.week-tracker-card.ordered{border-left:4px solid var(--sky);}
+.week-tracker-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;user-select:none;border-bottom:1px solid var(--slate-100);}
+.week-tracker-header:hover{background:var(--slate-50);}
+.week-tracker-title{font-size:13px;font-weight:700;color:var(--slate-800);}
+.week-tracker-theme{font-size:12px;color:var(--sage-dark);font-weight:600;margin-top:2px;}
+.week-tracker-meta{display:flex;align-items:center;gap:8px;}
+.tracker-status-pill{font-size:11px;font-weight:700;padding:3px 9px;border-radius:99px;}
+.pill-pending{background:var(--amber-light);color:#92400E;}
+.pill-ready{background:var(--sage-light);color:#065F46;}
+.pill-ordered{background:var(--sky-light);color:#0369A1;}
+.tracker-chevron{font-size:14px;color:var(--slate-500);transition:transform .2s;}
+.tracker-chevron.open{transform:rotate(180deg);}
+.week-tracker-body{padding:14px 16px;display:none;}
+.week-tracker-body.open{display:block;}
+.activity-block{margin-bottom:16px;}
+.activity-block:last-child{margin-bottom:0;}
+.activity-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--slate-500);margin-bottom:7px;display:flex;align-items:center;gap:5px;}
+.supply-item{display:grid;grid-template-columns:20px 1fr 90px 70px;gap:7px;align-items:center;padding:4px 0;border-bottom:1px solid var(--slate-100);}
+.supply-item:last-child{border-bottom:none;}
+.supply-checkbox{width:15px;height:15px;border:1.5px solid var(--slate-300);border-radius:3px;cursor:pointer;appearance:none;-webkit-appearance:none;background:white;flex-shrink:0;transition:all .15s;position:relative;}
+.supply-checkbox:checked{background:var(--sage);border-color:var(--sage);}
+.supply-checkbox:checked::after{content:'';position:absolute;top:2px;left:4px;width:5px;height:8px;border:2px solid white;border-top:none;border-left:none;transform:rotate(45deg);}
+.supply-name{font-size:12.5px;color:var(--slate-700);line-height:1.3;}
+.supply-name.unchecked{color:var(--slate-400);text-decoration:line-through;}
+.supply-qty-input{border:1.5px solid var(--slate-200);border-radius:5px;padding:4px 7px;font-size:11.5px;color:var(--slate-800);width:100%;font-family:inherit;outline:none;text-align:center;}
+.supply-qty-input:focus{border-color:var(--violet);}
+.supply-unit{font-size:10.5px;color:var(--slate-500);}
+.custom-item-row{display:grid;grid-template-columns:20px 1fr 90px 70px 26px;gap:7px;align-items:center;padding:4px 0;}
+.add-custom-btn{display:flex;align-items:center;gap:4px;font-size:11.5px;color:var(--sage-dark);background:none;border:1.5px dashed var(--sage);border-radius:5px;padding:4px 10px;cursor:pointer;margin-top:6px;font-family:inherit;font-weight:600;transition:all .15s;}
+.add-custom-btn:hover{background:var(--sage-light);}
+.remove-item-btn{background:none;border:none;color:var(--slate-400);cursor:pointer;font-size:14px;padding:0 2px;line-height:1;transition:color .15s;}
+.remove-item-btn:hover{color:var(--rose);}
+.tracker-footer{margin-top:14px;padding-top:10px;border-top:1px solid var(--slate-100);display:flex;align-items:center;justify-content:space-between;}
+.checked-count{font-size:11.5px;color:var(--slate-500);}
+
+/* PROCUREMENT */
+.procurement-card{background:white;border-radius:10px;border:1.5px solid var(--slate-100);overflow:hidden;margin-bottom:14px;}
+.procurement-card-header{background:var(--violet-light);padding:11px 16px;display:flex;align-items:center;justify-content:space-between;}
+.procurement-card-title{font-weight:700;font-size:14px;color:var(--violet-dark);}
+.procurement-table{width:100%;border-collapse:collapse;}
+.procurement-table th{padding:9px 16px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--slate-500);border-bottom:1px solid var(--slate-100);}
+.procurement-table td{padding:9px 16px;font-size:12.5px;border-bottom:1px solid var(--slate-50);vertical-align:top;}
+.procurement-table tr:last-child td{border-bottom:none;}
+.status-badge{display:inline-flex;align-items:center;gap:3px;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:99px;}
+.badge-pending{background:var(--amber-light);color:#92400E;}
+.badge-ready{background:var(--sage-light);color:#065F46;}
+.badge-ordered{background:var(--sky-light);color:#0369A1;}
+
+/* SITE FILTER TABS */
+.site-tabs{display:flex;gap:6px;margin-bottom:18px;}
+.site-tab{padding:6px 14px;border-radius:7px;border:1.5px solid var(--slate-200);background:white;font-size:12px;font-weight:600;cursor:pointer;color:var(--slate-600);transition:all .15s;display:flex;align-items:center;gap:6px;}
+.site-tab:hover{border-color:var(--slate-400);}
+.site-tab.active{background:var(--slate-800);color:white;border-color:var(--slate-800);}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;}
+.stat-card{background:white;border-radius:9px;padding:12px 14px;border:1.5px solid var(--slate-100);}
+.stat-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--slate-500);margin-bottom:3px;}
+.stat-value{font-size:22px;font-weight:800;color:var(--slate-900);}
+.stat-value.sage{color:var(--sage-dark);}
+.stat-value.amber{color:var(--amber-dark);}
+.stat-value.violet{color:var(--violet);}
+.stat-sub{font-size:10.5px;color:var(--slate-500);margin-top:1px;}
+.section-title{font-size:14px;font-weight:700;color:var(--slate-800);margin-bottom:10px;}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:500;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:white;border-radius:13px;width:520px;max-width:95vw;max-height:85vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.2);}
+.modal-header{padding:18px 22px 14px;border-bottom:1px solid var(--slate-100);display:flex;justify-content:space-between;align-items:flex-start;}
+.modal-title{font-size:17px;font-weight:700;}
+.modal-close{background:none;border:none;cursor:pointer;font-size:19px;color:var(--slate-500);}
+.modal-body{padding:18px 22px;}
+.modal-footer{padding:14px 22px;border-top:1px solid var(--slate-100);display:flex;justify-content:flex-end;gap:7px;}
+.form-group{margin-bottom:14px;}
+.form-label{display:block;font-size:11.5px;font-weight:700;color:var(--slate-700);margin-bottom:5px;letter-spacing:.03em;}
+.form-input{width:100%;border:1.5px solid var(--slate-200);border-radius:6px;padding:7px 11px;font-size:12.5px;color:var(--slate-800);outline:none;font-family:inherit;transition:border-color .15s;}
+.form-input:focus{border-color:var(--sage);}
+
+/* SYNC STATUS */
+.sync-pill{display:flex;align-items:center;gap:5px;font-size:11px;padding:3px 10px;border-radius:99px;font-weight:600;transition:all .3s;}
+.sync-pill.idle{background:rgba(255,255,255,.08);color:var(--slate-400);}
+.sync-pill.saving{background:rgba(245,158,11,.2);color:#FCD34D;}
+.sync-pill.saved{background:rgba(76,175,133,.2);color:#6EDBA8;}
+.sync-pill.error{background:rgba(244,63,94,.2);color:#FDA4AF;}
+.sync-pill.loading{background:rgba(14,165,233,.2);color:#7DD3FC;}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+/* SETUP SCREEN */
+.setup-screen{position:fixed;inset:0;background:var(--paper);z-index:999;display:flex;align-items:center;justify-content:center;}
+.setup-card{background:white;border-radius:16px;border:1.5px solid var(--slate-200);padding:36px 40px;width:520px;max-width:95vw;box-shadow:0 8px 40px rgba(0,0,0,.08);}
+.setup-title{font-size:20px;font-weight:700;color:var(--slate-900);margin-bottom:6px;}
+.setup-subtitle{font-size:13px;color:var(--slate-500);margin-bottom:24px;line-height:1.5;}
+.setup-steps{counter-reset:step;margin-bottom:24px;}
+.setup-step{display:flex;gap:12px;margin-bottom:14px;font-size:13px;color:var(--slate-700);line-height:1.5;}
+.step-num{width:22px;height:22px;border-radius:50%;background:var(--sage);color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.setup-note{font-size:11.5px;color:var(--slate-500);background:var(--slate-100);border-radius:7px;padding:10px 14px;margin-bottom:20px;line-height:1.6;}
+
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-brand"><div class="brand-dot"></div>CurriculumFlow</div>
+  <div class="topbar-cycle">
+    <div class="cycle-step sage">📅 <span class="step-date">2nd Mon</span>&nbsp;Select Themes</div>
+    <div class="cycle-arrow">›</div>
+    <div class="cycle-step amber">📋 <span class="step-date">3rd Mon</span>&nbsp;Update Tracker</div>
+    <div class="cycle-arrow">›</div>
+    <div class="cycle-step violet">🛒 <span class="step-date">3rd Tue</span>&nbsp;Procurement Buys</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div class="sync-pill idle" id="sync-pill"><div class="sync-dot"></div><span id="sync-label">Not connected</span></div>
+    <div class="topbar-classroom">
+      <span style="font-size:11px;color:var(--slate-400);">Viewing:</span>
+      <span class="classroom-badge" id="topbar-classroom-badge">—</span>
+    </div>
+    <button onclick="openSetup()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:6px;color:white;font-size:11px;padding:4px 9px;cursor:pointer;font-family:inherit;">⚙ Setup</button>
+  </div>
+</div>
+
+<div class="app-body">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-section">
+    <div class="sidebar-label">Planning</div>
+    <div class="nav-item active" id="nav-calendar" onclick="showPage('calendar',this)"><span class="nav-icon">📅</span> Calendar</div>
+    <div class="nav-item" id="nav-library" onclick="showPage('library',this)"><span class="nav-icon">📚</span> Theme Library</div>
+  </div>
+  <hr class="sidebar-divider">
+  <div class="sidebar-section">
+    <div class="sidebar-label">Operations</div>
+    <div class="nav-item" id="nav-tracker" onclick="showPage('tracker',this)"><span class="nav-icon">📋</span> Supply Tracker<span class="nav-badge" id="tracker-badge" style="display:none">0</span></div>
+    <div class="nav-item" id="nav-procurement" onclick="showPage('procurement',this)"><span class="nav-icon">🛒</span> Procurement</div>
+  </div>
+  <hr class="sidebar-divider">
+  <div class="sidebar-section">
+    <div class="sidebar-label">Classrooms</div>
+    <div id="classroom-list"></div>
+  </div>
+  <hr class="sidebar-divider">
+  <div class="sidebar-section">
+    <div class="sidebar-label">Month</div>
+    <div class="nav-item" onclick="changeMonth(-1)"><span class="nav-icon">‹</span> Previous</div>
+    <div class="nav-item" onclick="changeMonth(1)"><span class="nav-icon">›</span> Next</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- CALENDAR -->
+  <div class="page active" id="page-calendar">
+    <div class="page-header">
+      <div>
+        <div class="page-title" id="cal-title">June 2026</div>
+        <div class="page-subtitle">2nd Mon = select themes · 3rd Mon = tracker due · 3rd Tue = procurement</div>
+      </div>
+      <div style="display:flex;gap:7px;">
+        <button class="btn btn-outline" onclick="changeMonth(-1)">‹ Prev</button>
+        <button class="btn btn-outline" onclick="changeMonth(1)">Next ›</button>
+      </div>
+    </div>
+    <div id="calendar-alert"></div>
+    <div class="cal-grid" id="cal-grid">
+      <div class="cal-day-header">Sun</div><div class="cal-day-header">Mon</div>
+      <div class="cal-day-header">Tue</div><div class="cal-day-header">Wed</div>
+      <div class="cal-day-header">Thu</div><div class="cal-day-header">Fri</div>
+      <div class="cal-day-header">Sat</div>
+    </div>
+    <div style="margin-top:20px;">
+      <div class="section-title">📆 Weekly Theme Schedule — <span id="cal-classroom-name"></span></div>
+      <div class="week-rows" id="week-rows"></div>
+    </div>
+  </div>
+
+  <!-- LIBRARY -->
+  <div class="page" id="page-library">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Theme Library</div>
+        <div class="page-subtitle" id="library-subtitle">Filter by age group · Select 4–5 themes for next month</div>
+      </div>
+      <div style="display:flex;gap:7px;align-items:center;">
+        <span id="selection-count" style="font-size:12.5px;font-weight:600;color:var(--sage-dark);"></span>
+        <button class="btn btn-primary" onclick="confirmThemeSelection()">✓ Confirm Selection</button>
+      </div>
+    </div>
+    <div class="library-filters" id="library-filters"></div>
+    <div class="library-grid" id="library-grid"></div>
+  </div>
+
+  <!-- TRACKER -->
+  <div class="page" id="page-tracker">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Supply Tracker — <span id="tracker-classroom-name"></span></div>
+        <div class="page-subtitle">Showing next month's themes · Check activities & quantities · Due by 3rd Monday</div>
+      </div>
+      <button class="btn btn-violet" onclick="exportTracker()">📤 Export</button>
+    </div>
+    <div id="tracker-alert"></div>
+    <div id="tracker-rows"></div>
+  </div>
+
+  <!-- PROCUREMENT -->
+  <div class="page" id="page-procurement">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Procurement View</div>
+        <div class="page-subtitle">Next month's shopping lists — one per classroom, finalized by 3rd Monday</div>
+      </div>
+      <button class="btn btn-violet" onclick="printProcurement()">🖨 Print / Export All</button>
+    </div>
+    <div class="site-tabs" id="site-tabs"></div>
+    <div class="stats-row" id="proc-stats"></div>
+    <div id="procurement-content"></div>
+  </div>
+
+</div><!-- /main -->
+</div><!-- /app-body -->
+
+<!-- THEME SCHEDULE MODAL -->
+<div class="modal-overlay" id="modal-select">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">📅 Schedule Themes — 2nd Monday</div>
+        <div style="font-size:12px;color:var(--slate-500);margin-top:2px;" id="modal-select-subtitle"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-select')">✕</button>
+    </div>
+    <div class="modal-body"><div id="week-assign-rows"></div></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-select')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveThemeAssignments()">Save Schedule</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD THEME MODAL -->
+<div class="modal-overlay" id="modal-add-theme">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">➕ Add Theme to Library</div>
+      <button class="modal-close" onclick="closeModal('modal-add-theme')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Theme Name</label><input class="form-input" id="new-theme-name" placeholder="e.g. Ocean & Sea Creatures"></div>
+      <div class="form-group"><label class="form-label">Emoji</label><input class="form-input" id="new-theme-emoji" placeholder="🌊" maxlength="2"></div>
+      <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="new-theme-desc" rows="2" placeholder="Brief description..."></textarea></div>
+      <div class="form-group"><label class="form-label">Age Group</label>
+        <select class="form-input" id="new-theme-age">
+          <option>0–1 Year Old</option><option>1–2 Years Old</option><option>2–3 Years Old</option>
+          <option>3–4 Years Old</option><option>4–5 Years Old</option><option>All Age Groups</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Typical Supplies (comma-separated)</label><input class="form-input" id="new-theme-supplies" placeholder="e.g. Blue paint, shells, paper plates"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-add-theme')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveNewTheme()">Add to Library</button>
+    </div>
+  </div>
+</div>
+
+<!-- SETUP SCREEN -->
+<div id="setup-screen" class="setup-screen" style="display:none;">
+  <div class="setup-card">
+    <div class="setup-title">🔗 Connect to Google Sheets</div>
+    <div class="setup-subtitle">This connects CurriculumFlow to a shared Google Sheet so all teachers and procurement see live data.</div>
+    <div class="setup-steps">
+      <div class="setup-step"><div class="step-num">1</div><div>Open <strong>script.google.com</strong> → New project → paste the contents of <code>Code.gs</code> → save.</div></div>
+      <div class="setup-step"><div class="step-num">2</div><div>Click <strong>Deploy → New deployment → Web app</strong>. Set "Execute as" = Me, "Who has access" = Anyone. Click Deploy.</div></div>
+      <div class="setup-step"><div class="step-num">3</div><div>Copy the <strong>Web app URL</strong> (looks like <code>https://script.google.com/macros/s/…/exec</code>) and paste it below.</div></div>
+      <div class="setup-step"><div class="step-num">4</div><div>Run the <code>setupSpreadsheet()</code> function once from the Apps Script editor to create the sheets.</div></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Google Apps Script Web App URL</label>
+      <input class="form-input" id="script-url-input" placeholder="https://script.google.com/macros/s/.../exec" style="font-size:12px;">
+    </div>
+    <div class="setup-note">The URL is stored in your browser. Each teacher pastes it once on their device — after that, the app auto-saves every change to the shared Sheet.</div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn btn-outline" onclick="closeSetup()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveScriptUrl()">Connect & Test</button>
+    </div>
+    <div id="setup-status" style="margin-top:12px;font-size:12.5px;min-height:20px;"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+//  SITES & CLASSROOMS
+// ═══════════════════════════════════════
+const SITES = [
+  { id:'siteA', name:'Laguna Honda', color:'#4CAF85' },
+  { id:'siteB', name:'Taraval',      color:'#8B5CF6' },
+];
+
+let classrooms = [
+  { id:'c1', siteId:'siteA', name:'Starfish',      age:'', emoji:'⭐' },
+  { id:'c2', siteId:'siteA', name:'Turtles',       age:'', emoji:'🐢' },
+  { id:'c3', siteId:'siteA', name:'Penguins',      age:'', emoji:'🐧' },
+  { id:'c4', siteId:'siteA', name:'Otters',        age:'', emoji:'🦦' },
+  { id:'c5', siteId:'siteA', name:'Dolphins',      age:'', emoji:'🐬' },
+  { id:'c6', siteId:'siteB', name:'Bumblebees',    age:'', emoji:'🐝' },
+  { id:'c7', siteId:'siteB', name:'Hummingbirds',  age:'', emoji:'🐦' },
+];
+
+let currentClassroomId = 'c1';
+
+function getSite(siteId) { return SITES.find(s => s.id === siteId); }
+function getClassroom(id) { return classrooms.find(c => c.id === id); }
+function getSiteColor(siteId) { return getSite(siteId)?.color || '#64748B'; }
+
+// ═══════════════════════════════════════
+//  THEME LIBRARY DATA
+// ═══════════════════════════════════════
+const CATEGORY_COLORS = {
+  '0–1 Year Old':'#6B8F71','1–2 Years Old':'#8B7355','2–3 Years Old':'#7B9E87',
+  '3–4 Years Old':'#A0785A','4–5 Years Old':'#5B7B6F',
+};
+const MB_THEMES = [
+  { name:'Around the World',emoji:'🌍',desc:'Explore different cultures, countries, and traditions from around the globe.' },
+  { name:'Bugs & Butterflies',emoji:'🦋',desc:'Discover the fascinating world of insects, caterpillars, and metamorphosis.' },
+  { name:'Building Trust and Relationships',emoji:'🤝',desc:'Foster secure attachments and positive social bonds through play and connection.' },
+  { name:'Camping & Nature',emoji:'⛺',desc:'Explore the outdoors — trees, animals, stars, and the wonders of nature.' },
+  { name:'Celebrating Cultures',emoji:'🎉',desc:'Honor the diverse backgrounds and traditions of our community families.' },
+  { name:'Celebrating Diversity in Textures',emoji:'✋',desc:'Engage sensory exploration through a rich variety of textures and materials.' },
+  { name:'Colors in Our World',emoji:'🌈',desc:'Discover color through art, nature, and everyday observations.' },
+  { name:'Community Helpers',emoji:'🚒',desc:'Learn about the people who help keep our community safe and thriving.' },
+  { name:'Dinosaurs',emoji:'🦕',desc:'Travel back in time to explore dinosaurs, fossils, and prehistoric life.' },
+  { name:'Exploring Cause and Effect',emoji:'⚙️',desc:'Build early science thinking by exploring what happens when we act on the world.' },
+  { name:'Exploring Sensory Stimuli',emoji:'👁️',desc:'Engage all five senses through intentional play.' },
+  { name:'Exploring Sounds and Music',emoji:'🎵',desc:'Discover rhythm, melody, and how sound moves through the world around us.' },
+  { name:'Exploring Sounds and Rhythms',emoji:'🥁',desc:'Develop a sense of beat and musical pattern through movement.' },
+  { name:'Exploring Visual Stimulation',emoji:'👀',desc:'Support visual development through high-contrast patterns, lights, and tracking.' },
+  { name:"Father's Day",emoji:'👨',desc:"Celebrate the special people who play a fatherly role in our children's lives." },
+  { name:'Fine Motor Skill Development',emoji:'✂️',desc:'Strengthen hand and finger coordination through cutting, threading, and building.' },
+  { name:'Friendship & Kindness',emoji:'💛',desc:'Practice sharing, empathy, and caring for others in everyday interactions.' },
+  { name:'Fruits & Summer Treats',emoji:'🍓',desc:'Explore colorful fruits and refreshing summer foods through sensory activities.' },
+  { name:'Little Scientist',emoji:'🔬',desc:'Ask questions, make predictions, and experiment — early STEM exploration.' },
+  { name:'Ocean Exploration',emoji:'🌊',desc:'Dive into the deep blue — sea creatures, waves, and the wonders of the ocean.' },
+];
+const AGE_GROUPS = ['0–1 Year Old','1–2 Years Old','2–3 Years Old','3–4 Years Old','4–5 Years Old'];
+let themeLibrary = [];
+let _tid = 1;
+AGE_GROUPS.forEach(age => {
+  MB_THEMES.forEach(t => { themeLibrary.push({ id:_tid++, name:t.name, emoji:t.emoji, category:age, desc:t.desc, age }); });
+});
+function getTheme(id) { return themeLibrary.find(t => t.id === id); }
+
+// ═══════════════════════════════════════
+//  ACTIVITY / SUPPLY DATA
+// ═══════════════════════════════════════
+const THEME_ACTIVITIES = {
+  'Around the World':[
+    {activity:'Sensory map exploration',supplies:[{id:'aw1',name:'Large world map poster',defaultQty:1,unit:'poster'},{id:'aw2',name:'Fabric swatches (varied textures)',defaultQty:1,unit:'pack'},{id:'aw3',name:'Small flag stickers',defaultQty:1,unit:'sheet'}]},
+    {activity:'Cultural art & craft',supplies:[{id:'aw4',name:'Multicultural paint set',defaultQty:1,unit:'set'},{id:'aw5',name:'Large construction paper',defaultQty:1,unit:'pack (25 sheets)'},{id:'aw6',name:'Patterned paper / fabric scraps',defaultQty:1,unit:'bag'}]},
+    {activity:'Cultural food tasting',supplies:[{id:'aw7',name:'Disposable plates',defaultQty:30,unit:'plates'},{id:'aw8',name:'Napkins',defaultQty:1,unit:'pack'}]},
+  ],
+  'Bugs & Butterflies':[
+    {activity:'Bug sensory bin',supplies:[{id:'bb1',name:'Plastic bug figurines',defaultQty:1,unit:'set'},{id:'bb2',name:'Kinetic sand or soil',defaultQty:2,unit:'lbs'},{id:'bb3',name:'Magnifying glasses',defaultQty:6,unit:'pieces'}]},
+    {activity:'Butterfly coffee-filter craft',supplies:[{id:'bb4',name:'Coffee filters',defaultQty:30,unit:'filters'},{id:'bb5',name:'Watercolor paint sets',defaultQty:2,unit:'sets'},{id:'bb6',name:'Pipe cleaners',defaultQty:1,unit:'pack'},{id:'bb7',name:'Clothespins',defaultQty:30,unit:'pieces'}]},
+    {activity:'Caterpillar egg-carton craft',supplies:[{id:'bb8',name:'Egg cartons',defaultQty:8,unit:'cartons'},{id:'bb9',name:'Green & brown paint',defaultQty:2,unit:'bottles'},{id:'bb10',name:'Googly eyes',defaultQty:1,unit:'pack'}]},
+  ],
+  'Building Trust and Relationships':[
+    {activity:'Mirror play & self-recognition',supplies:[{id:'bt1',name:'Unbreakable mirrors (small)',defaultQty:6,unit:'pieces'},{id:'bt2',name:'Emotion face cards',defaultQty:1,unit:'set'}]},
+    {activity:'Cooperative building blocks',supplies:[{id:'bt3',name:'Foam building blocks',defaultQty:1,unit:'set'},{id:'bt4',name:'Duplo / large Lego bricks',defaultQty:1,unit:'bin'}]},
+    {activity:'Friendship collage',supplies:[{id:'bt5',name:'Magazines / printed photos',defaultQty:5,unit:'magazines'},{id:'bt6',name:'Glue sticks',defaultQty:10,unit:'sticks'},{id:'bt7',name:'Poster board',defaultQty:5,unit:'sheets'}]},
+  ],
+  'Camping & Nature':[
+    {activity:'Nature sensory bin',supplies:[{id:'cn1',name:'Pine cones',defaultQty:15,unit:'pieces'},{id:'cn2',name:'Small rocks / pebbles',defaultQty:1,unit:'bag'},{id:'cn3',name:'Dried leaves & twigs',defaultQty:1,unit:'bag'},{id:'cn4',name:'Plastic woodland animals',defaultQty:1,unit:'set'}]},
+    {activity:'Campfire tissue-paper craft',supplies:[{id:'cn5',name:'Brown & orange tissue paper',defaultQty:2,unit:'packs'},{id:'cn6',name:'Paper towel rolls',defaultQty:15,unit:'rolls'},{id:'cn7',name:'Yellow & red cellophane',defaultQty:1,unit:'pack'}]},
+    {activity:'Nature rubbings',supplies:[{id:'cn8',name:'White copy paper',defaultQty:1,unit:'ream'},{id:'cn9',name:'Peeled crayons (earth tones)',defaultQty:2,unit:'packs'}]},
+  ],
+  'Celebrating Cultures':[
+    {activity:'Cultural dress-up & role play',supplies:[{id:'cc1',name:'Fabric scarves (varied colors)',defaultQty:10,unit:'scarves'},{id:'cc2',name:'Dress-up accessories bin',defaultQty:1,unit:'bin'}]},
+    {activity:'Traditional pattern art',supplies:[{id:'cc3',name:'Colored card stock',defaultQty:1,unit:'pack'},{id:'cc4',name:'Metallic markers',defaultQty:1,unit:'set'},{id:'cc5',name:'Pattern stencil sheets',defaultQty:5,unit:'sheets'}]},
+    {activity:'Music & instrument exploration',supplies:[{id:'cc6',name:'Small percussion instruments',defaultQty:1,unit:'set'},{id:'cc7',name:'Movement scarves',defaultQty:10,unit:'scarves'}]},
+  ],
+  'Celebrating Diversity in Textures':[
+    {activity:'Texture sensory board',supplies:[{id:'cd1',name:'Foam or cork board',defaultQty:2,unit:'boards'},{id:'cd2',name:'Texture materials (sandpaper, velvet, bubble wrap, foil)',defaultQty:1,unit:'assorted pack'},{id:'cd3',name:'Hot glue gun & sticks',defaultQty:1,unit:'set'}]},
+    {activity:'Texture collage art',supplies:[{id:'cd4',name:'Textured paper assortment',defaultQty:1,unit:'pack'},{id:'cd5',name:'Fabric piece bag',defaultQty:1,unit:'bag'},{id:'cd6',name:'White glue / Mod Podge',defaultQty:2,unit:'bottles'}]},
+    {activity:'Tactile playdough station',supplies:[{id:'cd7',name:'Playdough (various colors)',defaultQty:6,unit:'tubs'},{id:'cd8',name:'Texture tools (forks, combs, stamps)',defaultQty:1,unit:'set'}]},
+  ],
+  'Colors in Our World':[
+    {activity:'Color mixing experiment',supplies:[{id:'co1',name:'Liquid watercolors (primary colors)',defaultQty:1,unit:'set'},{id:'co2',name:'Clear plastic cups',defaultQty:30,unit:'cups'},{id:'co3',name:'Droppers / pipettes',defaultQty:10,unit:'pieces'}]},
+    {activity:'Rainbow craft',supplies:[{id:'co4',name:'Colored tissue paper',defaultQty:1,unit:'pack'},{id:'co5',name:'Watercolor paper',defaultQty:25,unit:'sheets'},{id:'co6',name:'Cotton balls',defaultQty:1,unit:'bag'}]},
+    {activity:'Color sorting & matching',supplies:[{id:'co7',name:'Color sorting trays',defaultQty:6,unit:'trays'},{id:'co8',name:'Colored pom-poms',defaultQty:1,unit:'bag'},{id:'co9',name:'Colored buttons / counters',defaultQty:1,unit:'bag'}]},
+  ],
+  'Community Helpers':[
+    {activity:'Dramatic role-play station',supplies:[{id:'ch1',name:'Community helper hats set',defaultQty:1,unit:'set'},{id:'ch2',name:'Toy tool set',defaultQty:1,unit:'set'},{id:'ch3',name:'Toy medical kit',defaultQty:1,unit:'kit'}]},
+    {activity:'Community helper collage',supplies:[{id:'ch4',name:'Printed community helper images',defaultQty:25,unit:'sheets'},{id:'ch5',name:'Glue sticks',defaultQty:10,unit:'sticks'},{id:'ch6',name:'Poster board',defaultQty:5,unit:'sheets'}]},
+    {activity:'Vehicle craft (fire truck / ambulance)',supplies:[{id:'ch7',name:'Red & white cardstock',defaultQty:1,unit:'pack'},{id:'ch8',name:'Black & grey paint',defaultQty:2,unit:'bottles'},{id:'ch9',name:'Toilet paper rolls',defaultQty:20,unit:'rolls'}]},
+  ],
+  'Dinosaurs':[
+    {activity:'Dinosaur fossil dig',supplies:[{id:'di1',name:'Kinetic sand or moon sand',defaultQty:5,unit:'lbs'},{id:'di2',name:'Plastic dinosaur figures',defaultQty:1,unit:'set'},{id:'di3',name:'Small excavation brushes',defaultQty:10,unit:'brushes'}]},
+    {activity:'Dinosaur footprint stamping',supplies:[{id:'di4',name:'Dinosaur foot stamps',defaultQty:1,unit:'set'},{id:'di5',name:'Brown, green & black paint',defaultQty:3,unit:'bottles'},{id:'di6',name:'Butcher / roll paper',defaultQty:1,unit:'roll'}]},
+    {activity:'Clay fossil making',supplies:[{id:'di7',name:'Air-dry clay',defaultQty:3,unit:'lbs'},{id:'di8',name:'Plastic dinosaur figurines (for imprints)',defaultQty:1,unit:'set'}]},
+  ],
+  'Exploring Cause and Effect':[
+    {activity:'Ramp & ball experiment',supplies:[{id:'ce1',name:'Foam pool noodles (halved for ramps)',defaultQty:4,unit:'pieces'},{id:'ce2',name:'Balls of various sizes',defaultQty:1,unit:'set'},{id:'ce3',name:'Books to prop ramps',defaultQty:6,unit:'books'}]},
+    {activity:'Water pouring & funnels',supplies:[{id:'ce4',name:'Plastic measuring cups & pitchers',defaultQty:1,unit:'set'},{id:'ce5',name:'Funnels',defaultQty:4,unit:'pieces'},{id:'ce6',name:'Sensory bin / water table',defaultQty:1,unit:'bin'}]},
+    {activity:'Magnetic exploration',supplies:[{id:'ce7',name:'Horseshoe magnets',defaultQty:6,unit:'magnets'},{id:'ce8',name:'Magnetic / non-magnetic object set',defaultQty:1,unit:'set'},{id:'ce9',name:'Paper clips',defaultQty:1,unit:'box'}]},
+  ],
+  'Exploring Sensory Stimuli':[
+    {activity:'Multi-texture sensory bins',supplies:[{id:'es1',name:'Dyed rice (multiple colors)',defaultQty:5,unit:'lbs'},{id:'es2',name:'Dried pasta (varied shapes)',defaultQty:2,unit:'lbs'},{id:'es3',name:'Spoons, cups & scoops',defaultQty:1,unit:'set'}]},
+    {activity:'Scent exploration station',supplies:[{id:'es4',name:'Essential oil scent bottles',defaultQty:1,unit:'set'},{id:'es5',name:'Scented playdough',defaultQty:4,unit:'tubs'}]},
+    {activity:'Light & shadow play',supplies:[{id:'es6',name:'Flashlights',defaultQty:4,unit:'flashlights'},{id:'es7',name:'Colored cellophane sheets',defaultQty:1,unit:'pack'},{id:'es8',name:'Translucent manipulatives',defaultQty:1,unit:'set'}]},
+  ],
+  'Exploring Sounds and Music':[
+    {activity:'DIY shaker instrument making',supplies:[{id:'sm1',name:'Dried beans / rice',defaultQty:2,unit:'lbs'},{id:'sm2',name:'Empty plastic bottles with lids',defaultQty:20,unit:'bottles'},{id:'sm3',name:'Rubber bands',defaultQty:1,unit:'pack'},{id:'sm4',name:'Decorating tape & stickers',defaultQty:2,unit:'rolls'}]},
+    {activity:'Sound matching game',supplies:[{id:'sm5',name:'Sound matching cylinders set',defaultQty:1,unit:'set'},{id:'sm6',name:'Small bells',defaultQty:12,unit:'bells'}]},
+    {activity:'Music & movement session',supplies:[{id:'sm7',name:'Movement scarves',defaultQty:15,unit:'scarves'},{id:'sm8',name:'Rhythm sticks',defaultQty:15,unit:'pairs'}]},
+  ],
+  'Exploring Sounds and Rhythms':[
+    {activity:'Body percussion & clapping patterns',supplies:[{id:'sr1',name:'Rhythm / pattern cards',defaultQty:1,unit:'set'},{id:'sr2',name:'Hand drums',defaultQty:6,unit:'drums'}]},
+    {activity:'Bucket drumming station',supplies:[{id:'sr3',name:'Upturned buckets / containers',defaultQty:6,unit:'containers'},{id:'sr4',name:'Wooden drumsticks / dowels',defaultQty:12,unit:'sticks'}]},
+    {activity:'Musical freeze dance',supplies:[{id:'sr5',name:'Bluetooth speaker',defaultQty:1,unit:'speaker'},{id:'sr6',name:'Colored floor spots',defaultQty:1,unit:'set'}]},
+  ],
+  'Exploring Visual Stimulation':[
+    {activity:'High-contrast card play',supplies:[{id:'vs1',name:'Black & white high-contrast cards',defaultQty:1,unit:'set'},{id:'vs2',name:'Unbreakable mirror tiles',defaultQty:4,unit:'tiles'}]},
+    {activity:'Light table exploration',supplies:[{id:'vs3',name:'Colored translucent tiles',defaultQty:1,unit:'set'},{id:'vs4',name:'Translucent colored cups',defaultQty:1,unit:'set'},{id:'vs5',name:'X-ray image printouts',defaultQty:6,unit:'sheets'}]},
+    {activity:'Tracking mobiles / hanging objects',supplies:[{id:'vs6',name:'Hanging mobile materials',defaultQty:2,unit:'sets'},{id:'vs7',name:'Metallic ribbon / foil strips',defaultQty:1,unit:'pack'}]},
+  ],
+  "Father's Day":[
+    {activity:'Handprint / footprint keepsake',supplies:[{id:'fd1',name:'Non-toxic washable paint (skin tones)',defaultQty:1,unit:'set'},{id:'fd2',name:'Cardstock / canvas squares',defaultQty:25,unit:'pieces'},{id:'fd3',name:'Baby wipes / damp cloths',defaultQty:2,unit:'packs'}]},
+    {activity:'Photo frame craft',supplies:[{id:'fd4',name:'Pre-cut cardboard frames',defaultQty:25,unit:'frames'},{id:'fd5',name:'Foam stickers & decorations',defaultQty:2,unit:'packs'},{id:'fd6',name:'Glitter glue',defaultQty:6,unit:'tubes'}]},
+    {activity:'Card making station',supplies:[{id:'fd7',name:'Folded blank greeting cards',defaultQty:25,unit:'cards'},{id:'fd8',name:'Stamp set & ink pads',defaultQty:2,unit:'sets'},{id:'fd9',name:'Colored pencils',defaultQty:3,unit:'packs'}]},
+  ],
+  'Fine Motor Skill Development':[
+    {activity:'Lacing & threading',supplies:[{id:'fm1',name:'Lacing boards / cards',defaultQty:8,unit:'boards'},{id:'fm2',name:'Large beads for threading',defaultQty:1,unit:'set'},{id:'fm3',name:'Lacing strings / shoelaces',defaultQty:10,unit:'strings'}]},
+    {activity:'Scissor skills station',supplies:[{id:'fm4',name:'Child safety scissors',defaultQty:10,unit:'pairs'},{id:'fm5',name:'Cutting practice paper strips',defaultQty:2,unit:'packs'}]},
+    {activity:'Playdough & tools',supplies:[{id:'fm6',name:'Playdough (multiple colors)',defaultQty:6,unit:'tubs'},{id:'fm7',name:'Plastic rolling pins',defaultQty:6,unit:'rolling pins'},{id:'fm8',name:'Cookie cutters set',defaultQty:1,unit:'set'}]},
+  ],
+  'Friendship & Kindness':[
+    {activity:'Kindness rock painting',supplies:[{id:'fk1',name:'Smooth river rocks',defaultQty:30,unit:'rocks'},{id:'fk2',name:'Acrylic paint (bright colors)',defaultQty:1,unit:'set'},{id:'fk3',name:'Thin paint brushes',defaultQty:12,unit:'brushes'},{id:'fk4',name:'Mod Podge sealant',defaultQty:1,unit:'bottle'}]},
+    {activity:'Friendship bracelet making',supplies:[{id:'fk5',name:'Plastic pony beads',defaultQty:1,unit:'bag'},{id:'fk6',name:'Elastic cord',defaultQty:2,unit:'spools'}]},
+    {activity:'Kindness tree class project',supplies:[{id:'fk7',name:'Butcher paper (brown, for trunk)',defaultQty:1,unit:'roll'},{id:'fk8',name:'Green paper for handprint leaves',defaultQty:30,unit:'sheets'},{id:'fk9',name:'Markers',defaultQty:2,unit:'packs'}]},
+  ],
+  'Fruits & Summer Treats':[
+    {activity:'Fruit stamping art',supplies:[{id:'ft1',name:'Assorted fruits (apple, orange, strawberry)',defaultQty:1,unit:'bag'},{id:'ft2',name:'Tempera paint (bright colors)',defaultQty:1,unit:'set'},{id:'ft3',name:'White paper / canvas bags',defaultQty:25,unit:'sheets'}]},
+    {activity:'Fruit sensory bin',supplies:[{id:'ft4',name:'Plastic fruit set',defaultQty:1,unit:'set'},{id:'ft5',name:'Green shredded paper (grass)',defaultQty:1,unit:'bag'}]},
+    {activity:'Fruit tasting & sorting',supplies:[{id:'ft6',name:'Assorted fresh fruit (cut, for tasting)',defaultQty:1,unit:'tray'},{id:'ft7',name:'Sorting trays',defaultQty:6,unit:'trays'},{id:'ft8',name:'Toothpick flags',defaultQty:1,unit:'box'}]},
+  ],
+  'Little Scientist':[
+    {activity:'Baking soda & vinegar volcano',supplies:[{id:'ls1',name:'Baking soda',defaultQty:2,unit:'boxes'},{id:'ls2',name:'White vinegar',defaultQty:1,unit:'bottle (32 oz)'},{id:'ls3',name:'Food coloring set',defaultQty:1,unit:'set'},{id:'ls4',name:'Plastic containment trays',defaultQty:6,unit:'trays'}]},
+    {activity:'Sink or float experiment',supplies:[{id:'ls5',name:'Large clear bin / water table',defaultQty:1,unit:'bin'},{id:'ls6',name:'Assorted test objects (cork, rock, coin, sponge)',defaultQty:1,unit:'set'},{id:'ls7',name:'Recording sheet clipboards',defaultQty:6,unit:'clipboards'}]},
+    {activity:'Oobleck sensory play',supplies:[{id:'ls8',name:'Cornstarch',defaultQty:4,unit:'boxes'},{id:'ls9',name:'Food coloring set',defaultQty:1,unit:'set'},{id:'ls10',name:'Large mixing bowls',defaultQty:4,unit:'bowls'}]},
+  ],
+  'Ocean Exploration':[
+    {activity:'Ocean sensory bin',supplies:[{id:'oe1',name:'Blue water beads or kinetic sand',defaultQty:2,unit:'lbs'},{id:'oe2',name:'Plastic sea animal set',defaultQty:1,unit:'set'},{id:'oe3',name:'Shells & pebbles',defaultQty:1,unit:'bag'},{id:'oe4',name:'Blue food coloring',defaultQty:1,unit:'bottle'}]},
+    {activity:'Jellyfish paper-plate craft',supplies:[{id:'oe5',name:'Paper plates',defaultQty:25,unit:'plates'},{id:'oe6',name:'Crepe paper streamers (blue/pink/purple)',defaultQty:3,unit:'rolls'},{id:'oe7',name:'Googly eyes',defaultQty:1,unit:'pack'},{id:'oe8',name:'Watercolor paint sets',defaultQty:2,unit:'sets'}]},
+    {activity:'Fish printing (gyotaku style)',supplies:[{id:'oe9',name:'Rubber fish stamps',defaultQty:1,unit:'set'},{id:'oe10',name:'Tempera paint (ocean colors)',defaultQty:1,unit:'set'},{id:'oe11',name:'Rice paper or thin white paper',defaultQty:25,unit:'sheets'}]},
+  ],
+};
+
+function getActivitiesForTheme(n){ return THEME_ACTIVITIES[n]||[]; }
+function buildTrackerState(n){
+  return getActivitiesForTheme(n).map(act=>({
+    activity:act.activity,
+    supplies:act.supplies.map(s=>({...s,qty:s.defaultQty,checked:true})),
+    custom:[],
+  }));
+}
+
+// ═══════════════════════════════════════
+//  STATE — keyed by classroomId + month
+//  monthSchedule[cid][monthKey] = {0:themeId, ...}
+//  trackerData[cid][monthKey]   = [{week,themeId,activities,status}, ...]
+// ═══════════════════════════════════════
+let monthSchedule = {};
+let trackerData   = {};
+
+function getCS(cid){ if(!monthSchedule[cid]) monthSchedule[cid]={}; return monthSchedule[cid]; }
+function getTD(cid){ if(!trackerData[cid])   trackerData[cid]={};   return trackerData[cid]; }
+
+let viewYear  = 2026;
+let viewMonth = 5; // June (0-indexed)
+
+function getMonthKey(y,m){ return `${y}-${m}`; }
+function nextMonthYear(y,m){ return m===11?{y:y+1,m:0}:{y,m:m+1}; }
+
+function getNthMonday(year,month,n){
+  let count=0;
+  for(let d=1;d<=31;d++){
+    const dt=new Date(year,month,d);
+    if(dt.getMonth()!==month) break;
+    if(dt.getDay()===1){ count++; if(count===n) return dt; }
+  }
+}
+function getSelectionMonday(y,m)  { return getNthMonday(y,m,2); }
+function getTrackerMonday(y,m)    { return getNthMonday(y,m,3); }
+function getProcurementTuesday(y,m){
+  const mon=getTrackerMonday(y,m);
+  return mon?new Date(mon.getFullYear(),mon.getMonth(),mon.getDate()+1):null;
+}
+function formatDate(d){ return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
+function isToday(y,m,d){ const t=new Date(); return t.getFullYear()===y&&t.getMonth()===m&&t.getDate()===d; }
+
+function getWeeksInMonth(year,month){
+  const weeks=[], lastDay=new Date(year,month+1,0);
+  let d=new Date(year,month,1);
+  while(d.getDay()!==1) d.setDate(d.getDate()+1);
+  let wn=1;
+  while(d<=lastDay){
+    const end=new Date(d); end.setDate(end.getDate()+6);
+    weeks.push({weekNum:wn,start:new Date(d),end:end>lastDay?new Date(lastDay):end,label:`Week ${wn} (${d.toLocaleDateString('en-US',{month:'short',day:'numeric'})})`});
+    d.setDate(d.getDate()+7); wn++;
+  }
+  return weeks;
+}
+
+// ═══════════════════════════════════════
+//  SIDEBAR CLASSROOM LIST
+// ═══════════════════════════════════════
+function renderClassroomList(){
+  const container=document.getElementById('classroom-list');
+  let html='';
+  SITES.forEach(site=>{
+    const rooms=classrooms.filter(c=>c.siteId===site.id);
+    html+=`<div class="site-header-row"><div class="site-color-bar" style="background:${site.color}"></div>${site.name}</div>`;
+    rooms.forEach(room=>{
+      const active=room.id===currentClassroomId?'active-room':'';
+      html+=`<div class="classroom-item ${active}" onclick="switchClassroom('${room.id}')">
+        <div class="room-dot" style="background:${site.color}"></div>
+        <div class="room-name">${room.emoji} ${room.name}</div>
+      </div>`;
+    });
+  });
+  container.innerHTML=html;
+}
+
+function switchClassroom(id){
+  currentClassroomId=id;
+  renderClassroomList();
+  updateTopbarClassroom();
+  const active=document.querySelector('.page.active');
+  if(active?.id==='page-calendar') renderCalendar();
+  else if(active?.id==='page-tracker') renderTracker();
+  else if(active?.id==='page-procurement') renderProcurement();
+  else if(active?.id==='page-library') renderLibrary();
+}
+
+function updateTopbarClassroom(){
+  const room=getClassroom(currentClassroomId);
+  const site=room?getSite(room.siteId):null;
+  const badge=document.getElementById('topbar-classroom-badge');
+  if(room&&site){
+    badge.innerHTML=`<span class="site-dot" style="background:${site.color}"></span>${room.emoji} ${room.name} · ${site.name}`;
+  }
+}
+
+// ═══════════════════════════════════════
+//  CALENDAR
+// ═══════════════════════════════════════
+function renderCalendar(){
+  const y=viewYear,m=viewMonth;
+  const room=getClassroom(currentClassroomId);
+  const site=room?getSite(room.siteId):null;
+  const cs=getCS(currentClassroomId);
+  const key=getMonthKey(y,m);
+  const schedule=cs[key]||{};
+
+  document.getElementById('cal-title').textContent=new Date(y,m,1).toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  document.getElementById('cal-classroom-name').textContent=room?`${room.emoji} ${room.name}`:'';
+
+  const selMon=getSelectionMonday(y,m);
+  const trkMon=getTrackerMonday(y,m);
+  const procTue=getProcurementTuesday(y,m);
+  const today=new Date();
+  const alerts=[];
+
+  if(today.getFullYear()===y&&today.getMonth()===m){
+    if(selMon){ const d=Math.round((selMon-today)/86400000); if(d>=0&&d<=5) alerts.push(`<div class="alert alert-amber"><span class="alert-icon">⚠️</span><div class="alert-text"><div class="alert-title">Theme selection due ${d===0?'today':`in ${d} days`} — ${formatDate(selMon)}</div>Select 4–5 themes for next month for ${room?.name||'this classroom'}.</div><button class="btn btn-amber btn-sm" onclick="showPage('library',document.getElementById('nav-library'))">Open Library →</button></div>`); }
+    if(trkMon){ const d=Math.round((trkMon-today)/86400000); if(d>=0&&d<=5) alerts.push(`<div class="alert alert-violet"><span class="alert-icon">📋</span><div class="alert-text"><div class="alert-title">Tracker update due ${d===0?'today':`in ${d} days`} — ${formatDate(trkMon)}</div>Confirm supplies for next month's themes.</div><button class="btn btn-violet btn-sm" onclick="showPage('tracker',document.getElementById('nav-tracker'))">Open Tracker →</button></div>`); }
+  }
+  document.getElementById('calendar-alert').innerHTML=alerts.join('');
+
+  const grid=document.getElementById('cal-grid');
+  while(grid.children.length>7) grid.removeChild(grid.lastChild);
+
+  const firstOfMonth=new Date(y,m,1);
+  const startOffset=firstOfMonth.getDay();
+  const daysInMonth=new Date(y,m+1,0).getDate();
+  const daysInPrev=new Date(y,m,0).getDate();
+  const weeks=getWeeksInMonth(y,m);
+  const dayWeekMap={};
+  weeks.forEach((w,wi)=>{ for(let d=new Date(w.start);d<=w.end;d.setDate(d.getDate()+1)){ if(d.getMonth()===m) dayWeekMap[d.getDate()]=wi; } });
+
+  for(let i=0;i<startOffset;i++){
+    const c=document.createElement('div'); c.className='cal-cell other-month';
+    c.innerHTML=`<div class="cal-num">${daysInPrev-startOffset+i+1}</div>`; grid.appendChild(c);
+  }
+  for(let day=1;day<=daysInMonth;day++){
+    const c=document.createElement('div');
+    const isSel=selMon&&day===selMon.getDate();
+    const isTrk=trkMon&&day===trkMon.getDate();
+    const isPro=procTue&&day===procTue.getDate();
+    const isTod=isToday(y,m,day);
+    const themeId=schedule[dayWeekMap[day]];
+    const theme=themeId?getTheme(themeId):null;
+    let cls='cal-cell';
+    if(isTod) cls+=' today';
+    else if(isSel) cls+=' deadline-sel';
+    else if(isTrk) cls+=' deadline-tracker';
+    else if(isPro) cls+=' procurement-day';
+    c.className=cls;
+    let tags='';
+    if(isSel) tags+=`<div class="cal-tag tag-amber">📅 Select Themes</div>`;
+    if(isTrk) tags+=`<div class="cal-tag tag-violet">📋 Update Tracker</div>`;
+    if(isPro) tags+=`<div class="cal-tag tag-sky">🛒 Procurement Day</div>`;
+    if(theme&&!isSel&&!isTrk&&!isPro) tags+=`<div class="cal-tag tag-sage">${theme.emoji} ${theme.name}</div>`;
+    c.innerHTML=`<div class="cal-num">${day}</div>${tags}`;
+    if(isSel){ c.style.cursor='pointer'; c.title='Click to schedule themes'; c.onclick=()=>openThemeScheduleModal(y,m); }
+    grid.appendChild(c);
+  }
+  const rem=(startOffset+daysInMonth)%7; const fill=rem===0?0:7-rem;
+  for(let i=1;i<=fill;i++){ const c=document.createElement('div'); c.className='cal-cell other-month'; c.innerHTML=`<div class="cal-num">${i}</div>`; grid.appendChild(c); }
+
+  renderWeekRows(y,m);
+}
+
+function renderWeekRows(y,m){
+  const cs=getCS(currentClassroomId);
+  const schedule=cs[getMonthKey(y,m)]||{};
+  const weeks=getWeeksInMonth(y,m);
+  const room=getClassroom(currentClassroomId);
+  const container=document.getElementById('week-rows');
+  container.innerHTML='';
+  weeks.forEach((w,wi)=>{
+    const themeId=schedule[wi]; const theme=themeId?getTheme(themeId):null;
+    const row=document.createElement('div'); row.className='week-row';
+    row.innerHTML=`<div class="week-label">${w.label}</div>
+      <div class="theme-pill ${theme?'':'empty'}" onclick="openThemeScheduleModal(${y},${m})">${theme?`${theme.emoji} ${theme.name}`:'+ Assign Theme'}</div>
+      ${theme?`<div style="font-size:11px;color:var(--slate-400);margin-left:auto;">${theme.category}</div>`:''}`;
+    container.appendChild(row);
+  });
+  if(!weeks.length) container.innerHTML='<div style="color:var(--slate-500);font-size:12px;padding:10px;">No weeks found.</div>';
+}
+
+// ═══════════════════════════════════════
+//  LIBRARY
+// ═══════════════════════════════════════
+let libraryFilter='All', selectedThemeIds=new Set();
+
+function renderLibrary(){
+  const room=getClassroom(currentClassroomId);
+  const nm=nextMonthYear(viewYear,viewMonth);
+  const nmName=new Date(nm.y,nm.m,1).toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  document.getElementById('library-subtitle').textContent=`Selecting for ${room?room.name:''} · ${nmName} · Filter by age group, select 4–5 themes`;
+
+  const cats=['All',...AGE_GROUPS];
+  document.getElementById('library-filters').innerHTML=cats.map(c=>`<div class="filter-chip ${c===libraryFilter?'active':''}" onclick="setFilter('${c.replace(/'/g,"\\'")}')">${c}</div>`).join('');
+
+  let filtered;
+  if(libraryFilter==='All'){
+    const seen=new Set();
+    filtered=themeLibrary.filter(t=>{ if(seen.has(t.name)) return false; seen.add(t.name); return true; });
+  } else { filtered=themeLibrary.filter(t=>t.category===libraryFilter); }
+
+  document.getElementById('library-grid').innerHTML=filtered.map(t=>{
+    const color=CATEGORY_COLORS[t.category]||'#6B8F71';
+    const isSel=selectedThemeIds.has(t.id);
+    return `<div class="theme-card ${isSel?'selected':''}" onclick="toggleThemeSel(${t.id})">
+      <div class="theme-card-accent" style="background:${color}"></div>
+      <div style="padding-left:5px;"><div class="theme-emoji">${t.emoji}</div>
+      <div class="theme-name">${t.name}</div><div class="theme-desc">${t.desc}</div>
+      ${libraryFilter!=='All'?`<div style="font-size:10px;font-weight:600;padding:2px 6px;border-radius:3px;display:inline-block;margin-bottom:6px;background:${color}22;color:${color}">${t.category}</div>`:''}
+      <button class="theme-select-btn ${isSel?'selected':''}">${isSel?'✓ Selected':'+ Select'}</button></div></div>`;
+  }).join('');
+
+  const count=selectedThemeIds.size;
+  const el=document.getElementById('selection-count');
+  el.textContent=count>0?`${count} selected ${count<4?'(need at least 4)':count>5?'(max 5 recommended)':'✓ Ready'}`:'';
+  el.style.color=count>=4&&count<=5?'var(--sage-dark)':'var(--amber-dark)';
+}
+
+function setFilter(c){ libraryFilter=c; renderLibrary(); }
+function toggleThemeSel(id){ selectedThemeIds.has(id)?selectedThemeIds.delete(id):selectedThemeIds.add(id); renderLibrary(); }
+
+function confirmThemeSelection(){
+  if(!selectedThemeIds.size){ alert('Please select at least 1 theme.'); return; }
+  const {y:ny,m:nm}=nextMonthYear(viewYear,viewMonth);
+  const key=getMonthKey(ny,nm);
+  const cs=getCS(currentClassroomId), td=getTD(currentClassroomId);
+  const weeks=getWeeksInMonth(ny,nm);
+  const ids=Array.from(selectedThemeIds);
+  const schedule={};
+  weeks.forEach((_,wi)=>{ schedule[wi]=ids[wi%ids.length]; });
+  cs[key]=schedule;
+  td[key]=weeks.map((w,wi)=>{ const themeId=schedule[wi]; const theme=themeId?getTheme(themeId):null;
+    return { week:w.label, themeId, activities:theme?buildTrackerState(theme.name):[], status:'pending' }; });
+  selectedThemeIds.clear();
+  const nmName=new Date(ny,nm,1).toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  alert(`✓ Themes assigned to ${nmName} for ${getClassroom(currentClassroomId)?.name}!`);
+  showPage('calendar',document.getElementById('nav-calendar'));
+}
+
+// ═══════════════════════════════════════
+//  THEME SCHEDULE MODAL
+// ═══════════════════════════════════════
+let selectedThemesForModal={};
+
+function openThemeScheduleModal(y,m){
+  const {y:ny,m:nm}=nextMonthYear(y,m);
+  const cs=getCS(currentClassroomId);
+  const schedule=cs[getMonthKey(ny,nm)]||{};
+  const weeks=getWeeksInMonth(ny,nm);
+  const room=getClassroom(currentClassroomId);
+  const nmName=new Date(ny,nm,1).toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  document.getElementById('modal-select-subtitle').textContent=`${room?room.emoji+' '+room.name:''} · ${nmName}`;
+  selectedThemesForModal={...schedule};
+  document.getElementById('week-assign-rows').innerHTML=weeks.map((w,wi)=>{
+    const curId=selectedThemesForModal[wi];
+    return `<div style="margin-bottom:12px;"><div class="form-label">${w.label}</div>
+      <select class="form-input" onchange="selectedThemesForModal[${wi}]=parseInt(this.value)||null">
+        <option value="">— No theme —</option>
+        ${themeLibrary.filter((t,i,a)=>a.findIndex(x=>x.name===t.name)===i).map(t=>`<option value="${t.id}" ${curId===t.id?'selected':''}>${t.emoji} ${t.name}</option>`).join('')}
+      </select></div>`;
+  }).join('');
+  document.getElementById('modal-select').classList.add('open');
+}
+
+function saveThemeAssignments(){
+  const {y:ny,m:nm}=nextMonthYear(viewYear,viewMonth);
+  const key=getMonthKey(ny,nm);
+  const cs=getCS(currentClassroomId), td=getTD(currentClassroomId);
+  cs[key]={...selectedThemesForModal};
+  const weeks=getWeeksInMonth(ny,nm);
+  const existing=td[key]||[];
+  td[key]=weeks.map((w,wi)=>{
+    const themeId=selectedThemesForModal[wi]||null;
+    const theme=themeId?getTheme(themeId):null;
+    const ex=existing[wi];
+    return { week:w.label, themeId,
+      activities:(ex&&ex.themeId===themeId&&ex.activities)?ex.activities:(theme?buildTrackerState(theme.name):[]),
+      status:ex?.status||'pending' };
+  });
+  closeModal('modal-select'); renderCalendar();
+}
+
+// ═══════════════════════════════════════
+//  TRACKER
+// ═══════════════════════════════════════
+function renderTracker(){
+  const room=getClassroom(currentClassroomId);
+  const {y:ny,m:nm}=nextMonthYear(viewYear,viewMonth);
+  const key=getMonthKey(ny,nm);
+  const nmName=new Date(ny,nm,1).toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  const td=getTD(currentClassroomId);
+  const rows=td[key]||[];
+
+  document.getElementById('tracker-classroom-name').textContent=room?`${room.emoji} ${room.name} — ${nmName}`:'';
+
+  const trkMon=getTrackerMonday(viewYear,viewMonth), today=new Date();
+  const alertEl=document.getElementById('tracker-alert');
+  if(trkMon){
+    const d=Math.round((trkMon-today)/86400000);
+    alertEl.innerHTML=d>=0&&d<=3
+      ?`<div class="alert alert-amber"><span class="alert-icon">⏰</span><div class="alert-text"><div class="alert-title">Tracker due ${d===0?'today':`in ${d} day(s)`} — ${formatDate(trkMon)}</div>Confirm supplies for <strong>${nmName}</strong>. Procurement shops tomorrow.</div></div>`
+      :`<div class="alert alert-sage"><span class="alert-icon">📋</span><div class="alert-text"><div class="alert-title">Showing themes for ${nmName} · Due ${formatDate(trkMon)}</div>Check activities and confirm supply quantities by the 3rd Monday.</div></div>`;
+  } else alertEl.innerHTML='';
+
+  const pending=rows.filter(r=>r.status==='pending').length;
+  const badge=document.getElementById('tracker-badge');
+  badge.textContent=pending; badge.style.display=pending>0?'':'none';
+
+  const container=document.getElementById('tracker-rows');
+  if(!rows.length){
+    container.innerHTML=`<div style="text-align:center;padding:40px;color:var(--slate-500);">
+      <div style="font-size:32px;margin-bottom:10px;">📋</div>
+      <div style="font-weight:700;margin-bottom:4px;">No themes assigned for ${nmName} yet</div>
+      <div style="font-size:12px;">Select themes on the 2nd Monday, then come back here to confirm supplies.</div>
+      <button class="btn btn-primary" style="margin-top:14px;" onclick="showPage('calendar',document.getElementById('nav-calendar'))">Go to Calendar</button>
+    </div>`; return;
+  }
+  container.innerHTML=rows.map((row,ri)=>buildWeekCard(row,ri,key)).join('');
+}
+
+function buildWeekCard(row,ri,key){
+  const theme=row.themeId?getTheme(row.themeId):null;
+  const acts=row.activities||[];
+  const pCls=row.status==='ready'?'pill-ready':row.status==='ordered'?'pill-ordered':'pill-pending';
+  const pLbl=row.status==='ready'?'✓ Ready':row.status==='ordered'?'📦 Ordered':'⏳ Pending';
+  let tc=0,ts=0;
+  acts.forEach(a=>{ ts+=a.supplies.length+a.custom.length; tc+=a.supplies.filter(s=>s.checked).length+a.custom.filter(s=>s.checked).length; });
+  const actsHTML=acts.length===0
+    ?`<div style="font-size:12px;color:var(--slate-400);padding:10px 0;">No activities loaded. Add custom items below.</div>`
+    :acts.map((act,ai)=>`<div class="activity-block">
+        <div class="activity-label">📌 ${act.activity}</div>
+        ${act.supplies.map((s,si)=>`<div class="supply-item">
+          <input type="checkbox" class="supply-checkbox" ${s.checked?'checked':''} onchange="toggleSupply('${key}',${ri},${ai},${si},this.checked)">
+          <div class="supply-name ${s.checked?'':'unchecked'}" id="sn-${key}-${ri}-${ai}-${si}">${s.name}</div>
+          <input type="text" class="supply-qty-input" value="${s.qty}" placeholder="qty" onblur="updateSupplyQty('${key}',${ri},${ai},${si},this.value)" ${!s.checked?'disabled style="opacity:.4"':''}>
+          <div class="supply-unit">${s.unit}</div>
+        </div>`).join('')}
+        ${act.custom.map((s,ci)=>`<div class="custom-item-row">
+          <input type="checkbox" class="supply-checkbox" ${s.checked?'checked':''} onchange="toggleCustom('${key}',${ri},${ai},${ci},this.checked)">
+          <input type="text" class="supply-qty-input" value="${s.name}" placeholder="Item name" style="text-align:left;width:100%;" onblur="updateCustomName('${key}',${ri},${ai},${ci},this.value)">
+          <input type="text" class="supply-qty-input" value="${s.qty}" placeholder="qty" onblur="updateCustomQty('${key}',${ri},${ai},${ci},this.value)">
+          <input type="text" class="supply-qty-input" value="${s.unit}" placeholder="unit" onblur="updateCustomUnit('${key}',${ri},${ai},${ci},this.value)">
+          <button class="remove-item-btn" onclick="removeCustom('${key}',${ri},${ai},${ci})">✕</button>
+        </div>`).join('')}
+        <button class="add-custom-btn" onclick="addCustomItem('${key}',${ri},${ai})">+ Add item</button>
+      </div>`).join('');
+  return `<div class="week-tracker-card ${row.status}" id="wtc-${ri}">
+    <div class="week-tracker-header" onclick="toggleWeekCard(${ri})">
+      <div><div class="week-tracker-title">${row.week}</div>
+        <div class="week-tracker-theme">${theme?`${theme.emoji} ${theme.name}`:'<span style="color:var(--slate-400)">No theme</span>'}</div></div>
+      <div class="week-tracker-meta">
+        <span style="font-size:11px;color:var(--slate-500);">${tc}/${ts} items</span>
+        <span class="tracker-status-pill ${pCls}">${pLbl}</span>
+        <span class="tracker-chevron" id="chev-${ri}">▾</span>
+      </div>
+    </div>
+    <div class="week-tracker-body" id="wtb-${ri}">
+      ${actsHTML}
+      <div class="tracker-footer">
+        <span class="checked-count">${tc} of ${ts} supplies selected</span>
+        <div style="display:flex;gap:7px;">
+          <select class="form-input" style="width:auto;font-size:12px;padding:5px 9px;" onchange="updateWeekStatus('${key}',${ri},this.value)">
+            <option value="pending" ${row.status==='pending'?'selected':''}>⏳ Pending</option>
+            <option value="ready"   ${row.status==='ready'  ?'selected':''}>✓ Ready</option>
+            <option value="ordered" ${row.status==='ordered'?'selected':''}>📦 Ordered</option>
+          </select>
+          <button class="btn btn-primary btn-sm" onclick="markWeekReady('${key}',${ri})">Mark Ready</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function getTrackerData(key){ return getTD(currentClassroomId)[key]; }
+function toggleWeekCard(ri){ document.getElementById(`wtb-${ri}`)?.classList.toggle('open'); document.getElementById(`chev-${ri}`)?.classList.toggle('open'); }
+function toggleSupply(key,ri,ai,si,v){ const d=getTrackerData(key); if(!d) return; d[ri].activities[ai].supplies[si].checked=v; const n=document.getElementById(`sn-${key}-${ri}-${ai}-${si}`); if(n) n.className=`supply-name ${v?'':'unchecked'}`; refreshWeekCard(key,ri); }
+function updateSupplyQty(key,ri,ai,si,v){ const d=getTrackerData(key); if(d) d[ri].activities[ai].supplies[si].qty=v; }
+function addCustomItem(key,ri,ai){ const d=getTrackerData(key); if(!d) return; d[ri].activities[ai].custom.push({name:'',qty:1,unit:'',checked:true}); refreshWeekCard(key,ri); }
+function updateCustomName(key,ri,ai,ci,v){ const d=getTrackerData(key); if(d) d[ri].activities[ai].custom[ci].name=v; }
+function updateCustomQty(key,ri,ai,ci,v){ const d=getTrackerData(key); if(d) d[ri].activities[ai].custom[ci].qty=v; }
+function updateCustomUnit(key,ri,ai,ci,v){ const d=getTrackerData(key); if(d) d[ri].activities[ai].custom[ci].unit=v; }
+function toggleCustom(key,ri,ai,ci,v){ const d=getTrackerData(key); if(!d) return; d[ri].activities[ai].custom[ci].checked=v; refreshWeekCard(key,ri); }
+function removeCustom(key,ri,ai,ci){ const d=getTrackerData(key); if(!d) return; d[ri].activities[ai].custom.splice(ci,1); refreshWeekCard(key,ri); }
+function updateWeekStatus(key,ri,v){ const d=getTrackerData(key); if(d){ d[ri].status=v; refreshWeekCard(key,ri); refreshBadge(key); } }
+function markWeekReady(key,ri){ const d=getTrackerData(key); if(d){ d[ri].status='ready'; refreshWeekCard(key,ri); refreshBadge(key); } }
+function refreshBadge(key){ const rows=getTrackerData(key)||[]; const p=rows.filter(r=>r.status==='pending').length; const b=document.getElementById('tracker-badge'); b.textContent=p; b.style.display=p>0?'':'none'; }
+function refreshWeekCard(key,ri){
+  const card=document.getElementById(`wtc-${ri}`); if(!card) return;
+  const wasOpen=document.getElementById(`wtb-${ri}`)?.classList.contains('open');
+  const row=(getTrackerData(key)||[])[ri]; if(!row) return;
+  card.outerHTML=buildWeekCard(row,ri,key);
+  if(wasOpen){ document.getElementById(`wtb-${ri}`)?.classList.add('open'); document.getElementById(`chev-${ri}`)?.classList.add('open'); }
+}
+
+function exportTracker(){
+  const {y:ny,m:nm}=nextMonthYear(viewYear,viewMonth);
+  const key=getMonthKey(ny,nm);
+  const rows=getTD(currentClassroomId)[key]||[];
+  const room=getClassroom(currentClassroomId);
+  const site=room?getSite(room.siteId):null;
+  const procTue=getProcurementTuesday(viewYear,viewMonth);
+  const nmName=new Date(ny,nm,1).toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  let text=`PROCUREMENT LIST\nSite: ${site?.name||''} · Classroom: ${room?.name||''}\nMonth: ${nmName}\nShopping Day: ${procTue?formatDate(procTue):'TBD'}\nExported: ${new Date().toLocaleDateString()}\n${'─'.repeat(50)}\n\n`;
+  rows.forEach(r=>{
+    const theme=r.themeId?getTheme(r.themeId):null;
+    text+=`${r.week}  |  ${theme?theme.name:'No theme'}  |  ${r.status.toUpperCase()}\n`;
+    (r.activities||[]).forEach(act=>{
+      const items=[...act.supplies.filter(s=>s.checked),...act.custom.filter(s=>s.checked&&s.name)];
+      if(!items.length) return;
+      text+=`  ${act.activity}\n`;
+      items.forEach(s=>{ text+=`    - ${s.name} : ${s.qty} ${s.unit}\n`; });
+    });
+    text+='\n';
+  });
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([text],{type:'text/plain'}));
+  a.download=`procurement-${room?.name||'classroom'}-${ny}-${String(nm+1).padStart(2,'0')}.txt`;
+  a.click();
+}
+
+// PROCUREMENT VIEW
+let procSiteFilter='all';
+
+function renderProcurement(){
+  const {y:ny,m:nm}=nextMonthYear(viewYear,viewMonth);
+  const key=getMonthKey(ny,nm);
+  const nmName=new Date(ny,nm,1).toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  const procTue=getProcurementTuesday(viewYear,viewMonth);
+  document.getElementById('site-tabs').innerHTML=`
+    <div class="site-tab ${procSiteFilter==='all'?'active':''}" onclick="setProcFilter('all')">All Sites</div>
+    ${SITES.map(s=>`<div class="site-tab ${procSiteFilter===s.id?'active':''}" onclick="setProcFilter('${s.id}')">
+      <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${s.color};margin-right:4px;"></span>${s.name}
+    </div>`).join('')}`;
+  const filteredRooms=classrooms.filter(c=>procSiteFilter==='all'||c.siteId===procSiteFilter);
+  let totalItems=0,totalPending=0;
+  filteredRooms.forEach(room=>{
+    const rows=getTD(room.id)[key]||[];
+    rows.forEach(r=>{ if(r.status==='pending') totalPending++;
+      (r.activities||[]).forEach(act=>{ totalItems+=act.supplies.filter(s=>s.checked).length+act.custom.filter(s=>s.checked&&s.name).length; });
+    });
+  });
+  document.getElementById('proc-stats').innerHTML=`
+    <div class="stat-card"><div class="stat-label">Classrooms</div><div class="stat-value">${filteredRooms.length}</div><div class="stat-sub">In view</div></div>
+    <div class="stat-card"><div class="stat-label">Total Items</div><div class="stat-value sage">${totalItems}</div><div class="stat-sub">Across all rooms</div></div>
+    <div class="stat-card"><div class="stat-label">Pending</div><div class="stat-value amber">${totalPending}</div><div class="stat-sub">Awaiting sign-off</div></div>
+    <div class="stat-card"><div class="stat-label">Shopping Day</div><div class="stat-value violet" style="font-size:14px;">${procTue?formatDate(procTue):'TBD'}</div><div class="stat-sub">Procurement Tuesday</div></div>`;
+  const content=document.getElementById('procurement-content');
+  if(!filteredRooms.length){ content.innerHTML='<div style="padding:40px;text-align:center;color:var(--slate-500);">No classrooms found.</div>'; return; }
+  let html=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+    <div class="section-title" style="margin:0;">Shopping Lists for ${nmName}</div>
+    ${procTue?`<div style="font-size:12.5px;color:var(--violet-dark);font-weight:600;">Buy by: ${formatDate(procTue)}</div>`:''}
+  </div>`;
+  const sites=procSiteFilter==='all'?SITES:SITES.filter(s=>s.id===procSiteFilter);
+  sites.forEach(site=>{
+    const siteRooms=filteredRooms.filter(c=>c.siteId===site.id);
+    if(!siteRooms.length) return;
+    html+=`<div style="display:flex;align-items:center;gap:8px;margin:16px 0 8px;">
+      <div style="width:4px;height:16px;border-radius:2px;background:${site.color}"></div>
+      <div style="font-size:13px;font-weight:700;color:var(--slate-700);">${site.name}</div>
+    </div>`;
+    siteRooms.forEach(room=>{
+      const rows=getTD(room.id)[key]||[];
+      html+=`<div class="procurement-card" style="border-top:3px solid ${site.color};">
+        <div class="procurement-card-header" style="background:${site.color}18;">
+          <div><div class="procurement-card-title" style="color:${site.color};">${room.emoji} ${room.name}</div>
+          <div style="font-size:11px;color:var(--slate-500);margin-top:1px;">${site.name}</div></div>
+          ${rows.length===0?'<span class="status-badge badge-pending">No themes yet</span>':
+            `<span style="font-size:11px;color:var(--slate-500);">${rows.length} week(s)</span>`}
+        </div>`;
+      if(!rows.length){
+        html+=`<div style="padding:12px 16px;font-size:12px;color:var(--slate-400);">No themes assigned for this classroom yet.</div>`;
+      } else {
+        rows.forEach(r=>{
+          const theme=r.themeId?getTheme(r.themeId):null;
+          const allSupplies=[];
+          (r.activities||[]).forEach(act=>{ [...act.supplies.filter(s=>s.checked),...act.custom.filter(s=>s.checked&&s.name)].forEach(s=>allSupplies.push({activity:act.activity,name:s.name,qty:s.qty,unit:s.unit})); });
+          const bCls=r.status==='ready'?'badge-ready':r.status==='ordered'?'badge-ordered':'badge-pending';
+          const bLbl=r.status==='ready'?'Ready':r.status==='ordered'?'Ordered':'Pending';
+          html+=`<div style="border-top:1px solid var(--slate-100);padding:10px 16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+              <div style="font-size:12px;font-weight:600;">${r.week}${theme?' · '+theme.emoji+' '+theme.name:''}</div>
+              <span class="status-badge ${bCls}">${bLbl}</span>
+            </div>`;
+          if(!allSupplies.length){ html+=`<div style="font-size:11.5px;color:var(--slate-400);">No supplies checked yet.</div>`; }
+          else { html+=`<table class="procurement-table"><thead><tr><th>Activity</th><th>Supply</th><th>Qty</th><th>Unit</th></tr></thead><tbody>
+            ${allSupplies.map(s=>`<tr><td style="color:var(--slate-500);font-size:11px;">${s.activity}</td><td style="font-weight:500;">${s.name}</td><td style="text-align:center;font-weight:600;">${s.qty}</td><td style="color:var(--slate-500);">${s.unit}</td></tr>`).join('')}
+            </tbody></table>`; }
+          html+='</div>';
+        });
+      }
+      html+='</div>';
+    });
+  });
+  content.innerHTML=html;
+}
+
+function setProcFilter(f){ procSiteFilter=f; renderProcurement(); }
+function printProcurement(){ window.print(); }
+
+// ADD THEME
+function openAddThemeModal(){ document.getElementById('modal-add-theme').classList.add('open'); }
+function saveNewTheme(){
+  const name=document.getElementById('new-theme-name').value.trim();
+  if(!name){ alert('Please enter a theme name.'); return; }
+  const age=document.getElementById('new-theme-age').value;
+  themeLibrary.push({ id:Math.max(...themeLibrary.map(t=>t.id))+1, name, emoji:document.getElementById('new-theme-emoji').value.trim()||'📌', category:age, desc:document.getElementById('new-theme-desc').value.trim()||'A custom theme.', age });
+  closeModal('modal-add-theme');
+  ['new-theme-name','new-theme-emoji','new-theme-desc','new-theme-supplies'].forEach(id=>document.getElementById(id).value='');
+  alert('Theme added!');
+  if(document.getElementById('page-library').classList.contains('active')) renderLibrary();
+}
+
+// NAV
+function showPage(page,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>{ n.classList.remove('active'); n.classList.remove('active-violet'); });
+  document.getElementById(`page-${page}`).classList.add('active');
+  if(el) el.classList.add(page==='procurement'||page==='tracker'?'active-violet':'active');
+  if(page==='calendar') renderCalendar();
+  else if(page==='library') renderLibrary();
+  else if(page==='tracker') renderTracker();
+  else if(page==='procurement') renderProcurement();
+}
+function changeMonth(delta){
+  viewMonth+=delta;
+  if(viewMonth>11){ viewMonth=0; viewYear++; }
+  if(viewMonth<0){ viewMonth=11; viewYear--; }
+  const active=document.querySelector('.page.active');
+  if(active?.id==='page-calendar') renderCalendar();
+  else if(active?.id==='page-tracker') renderTracker();
+  else if(active?.id==='page-procurement') renderProcurement();
+}
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{ if(e.target===o) o.classList.remove('open'); }));
+
+// ═══════════════════════════════════════
+//  GOOGLE APPS SCRIPT API LAYER
+// ═══════════════════════════════════════
+
+const LS_URL_KEY = 'curriculumflow_script_url';
+let scriptUrl = localStorage.getItem(LS_URL_KEY) || '';
+let saveTimer = null;
+let isConnected = false;
+
+// ── Sync pill UI ──
+function setSyncState(state, label) {
+  const pill = document.getElementById('sync-pill');
+  const lbl  = document.getElementById('sync-label');
+  pill.className = 'sync-pill ' + state;
+  lbl.textContent = label;
+}
+
+// ── Low-level fetch wrapper ──
+async function apiGet(params) {
+  if (!scriptUrl) return null;
+  const url = scriptUrl + '?' + new URLSearchParams(params).toString();
+  const res = await fetch(url);
+  return res.json();
+}
+
+async function apiPost(body) {
+  if (!scriptUrl) return null;
+  const res = await fetch(scriptUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  return res.json();
+}
+
+// ── Test connection ──
+async function testConnection() {
+  if (!scriptUrl) { setSyncState('idle','Not connected'); isConnected=false; return false; }
+  setSyncState('loading','Connecting…');
+  try {
+    const r = await apiGet({ action:'ping' });
+    if (r && r.ok) { setSyncState('saved','Connected ✓'); isConnected=true; return true; }
+    setSyncState('error','Connection failed'); isConnected=false; return false;
+  } catch(e) {
+    setSyncState('error','Connection failed'); isConnected=false; return false;
+  }
+}
+
+// ── Load schedule for current classroom + month ──
+async function loadSchedule(classroomId, monthKey) {
+  if (!isConnected) return null;
+  try {
+    const r = await apiGet({ action:'getSchedule', classroomId, monthKey });
+    return (r && r.found) ? r.data : null;
+  } catch(e) { return null; }
+}
+
+// ── Load tracker for current classroom + next month ──
+async function loadTracker(classroomId, monthKey) {
+  if (!isConnected) return null;
+  try {
+    const r = await apiGet({ action:'getTracker', classroomId, monthKey });
+    return (r && r.found) ? r.data : null;
+  } catch(e) { return null; }
+}
+
+// ── Load ALL classrooms' tracker data for procurement ──
+async function loadAllTracker(monthKey) {
+  if (!isConnected) return null;
+  try {
+    const r = await apiGet({ action:'getAllTracker', monthKey });
+    return (r && r.found) ? r.classrooms : null;
+  } catch(e) { return null; }
+}
+
+// ── Auto-save: debounced 1.5s after any change ──
+function scheduleSave(classroomId, monthKey) {
+  if (!isConnected) return;
+  clearTimeout(saveTimer);
+  setSyncState('saving','Saving…');
+  saveTimer = setTimeout(() => persistData(classroomId, monthKey), 1500);
+}
+
+async function persistData(classroomId, monthKey) {
+  if (!isConnected) return;
+  const cs = getCS(classroomId);
+  const td = getTD(classroomId);
+  const {y:ny, m:nm} = nextMonthYear(viewYear, viewMonth);
+  const nextKey = getMonthKey(ny, nm);
+  try {
+    const jobs = [];
+    if (cs[monthKey]) jobs.push(apiPost({ action:'saveSchedule', classroomId, monthKey, schedule: cs[monthKey] }));
+    if (td[nextKey])  jobs.push(apiPost({ action:'saveTracker',  classroomId, monthKey: nextKey, rows: td[nextKey] }));
+    await Promise.all(jobs);
+    setSyncState('saved', 'Saved ✓ ' + new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}));
+  } catch(e) {
+    setSyncState('error', 'Save failed — check connection');
+  }
+}
+
+// ── Load data when switching classroom or month ──
+async function loadClassroomData(classroomId) {
+  if (!isConnected) return;
+  const monthKey = getMonthKey(viewYear, viewMonth);
+  const {y:ny, m:nm} = nextMonthYear(viewYear, viewMonth);
+  const nextKey  = getMonthKey(ny, nm);
+  setSyncState('loading','Loading…');
+  try {
+    const [sched, tracker] = await Promise.all([
+      loadSchedule(classroomId, monthKey),
+      loadTracker(classroomId, nextKey),
+    ]);
+    if (sched)   getCS(classroomId)[monthKey] = sched;
+    if (tracker) getTD(classroomId)[nextKey]  = tracker;
+    setSyncState('saved','Loaded ✓');
+  } catch(e) {
+    setSyncState('error','Load failed');
+  }
+}
+
+// ── Patch save triggers into existing functions ──
+// Called after any user action that mutates state
+function triggerSave() {
+  const monthKey = getMonthKey(viewYear, viewMonth);
+  scheduleSave(currentClassroomId, monthKey);
+}
+
+// ── Setup screen ──
+function openSetup() {
+  document.getElementById('script-url-input').value = scriptUrl;
+  document.getElementById('setup-status').textContent = '';
+  document.getElementById('setup-screen').style.display = 'flex';
+}
+function closeSetup() {
+  document.getElementById('setup-screen').style.display = 'none';
+}
+async function saveScriptUrl() {
+  const url = document.getElementById('script-url-input').value.trim();
+  const statusEl = document.getElementById('setup-status');
+  if (!url) { statusEl.textContent = '⚠ Please paste the Web App URL.'; return; }
+  scriptUrl = url;
+  localStorage.setItem(LS_URL_KEY, url);
+  statusEl.textContent = '⏳ Testing connection…';
+  const ok = await testConnection();
+  if (ok) {
+    statusEl.style.color = 'var(--sage-dark)';
+    statusEl.textContent = '✓ Connected! Loading data…';
+    await loadClassroomData(currentClassroomId);
+    setTimeout(() => { closeSetup(); renderCalendar(); }, 800);
+  } else {
+    statusEl.style.color = 'var(--rose)';
+    statusEl.textContent = '✗ Could not connect. Check the URL and make sure the deployment is set to "Anyone can access".';
+  }
+}
+
+// ═══════════════════════════════════════
+//  PATCH EXISTING FUNCTIONS TO TRIGGER SAVE
+// ═══════════════════════════════════════
+
+// Wrap saveThemeAssignments to trigger save after
+const _origSaveAssignments = saveThemeAssignments;
+window.saveThemeAssignments = async function() {
+  _origSaveAssignments();
+  triggerSave();
+};
+
+// Wrap confirmThemeSelection to trigger save after
+const _origConfirm = confirmThemeSelection;
+window.confirmThemeSelection = async function() {
+  _origConfirm();
+  triggerSave();
+};
+
+// Wrap markWeekReady and updateWeekStatus to trigger save
+const _origMarkReady = markWeekReady;
+window.markWeekReady = function(key,ri) { _origMarkReady(key,ri); triggerSave(); };
+
+const _origUpdateStatus = updateWeekStatus;
+window.updateWeekStatus = function(key,ri,v) { _origUpdateStatus(key,ri,v); triggerSave(); };
+
+// Wrap supply toggles to trigger save
+const _origToggleSupply = toggleSupply;
+window.toggleSupply = function(key,ri,ai,si,v) { _origToggleSupply(key,ri,ai,si,v); triggerSave(); };
+
+const _origToggleCustom = toggleCustom;
+window.toggleCustom = function(key,ri,ai,ci,v) { _origToggleCustom(key,ri,ai,ci,v); triggerSave(); };
+
+const _origRemoveCustom = removeCustom;
+window.removeCustom = function(key,ri,ai,ci) { _origRemoveCustom(key,ri,ai,ci); triggerSave(); };
+
+const _origAddCustom = addCustomItem;
+window.addCustomItem = function(key,ri,ai) { _origAddCustom(key,ri,ai); triggerSave(); };
+
+// Wrap qty/name blur handlers to trigger save (these are inline onblur calls)
+const _origUpdateSupplyQty = updateSupplyQty;
+window.updateSupplyQty = function(key,ri,ai,si,v) { _origUpdateSupplyQty(key,ri,ai,si,v); triggerSave(); };
+
+const _origUpdateCustomQty = updateCustomQty;
+window.updateCustomQty = function(key,ri,ai,ci,v) { _origUpdateCustomQty(key,ri,ai,ci,v); triggerSave(); };
+
+const _origUpdateCustomName = updateCustomName;
+window.updateCustomName = function(key,ri,ai,ci,v) { _origUpdateCustomName(key,ri,ai,ci,v); triggerSave(); };
+
+const _origUpdateCustomUnit = updateCustomUnit;
+window.updateCustomUnit = function(key,ri,ai,ci,v) { _origUpdateCustomUnit(key,ri,ai,ci,v); triggerSave(); };
+
+// Wrap switchClassroom to load data on switch
+const _origSwitch = switchClassroom;
+window.switchClassroom = async function(id) {
+  _origSwitch(id);
+  await loadClassroomData(id);
+  const active = document.querySelector('.page.active');
+  if (active?.id === 'page-calendar') renderCalendar();
+  else if (active?.id === 'page-tracker') renderTracker();
+};
+
+// Wrap changeMonth to load data when month changes
+const _origChangeMonth = changeMonth;
+window.changeMonth = async function(delta) {
+  _origChangeMonth(delta);
+  await loadClassroomData(currentClassroomId);
+};
+
+// Procurement view: load all classrooms from server
+const _origRenderProcurement = renderProcurement;
+window.renderProcurement = async function() {
+  if (isConnected) {
+    const {y:ny, m:nm} = nextMonthYear(viewYear, viewMonth);
+    const nextKey = getMonthKey(ny, nm);
+    setSyncState('loading','Loading all classrooms…');
+    const allData = await loadAllTracker(nextKey);
+    if (allData) {
+      Object.entries(allData).forEach(([cid, val]) => {
+        getTD(cid)[nextKey] = val.data;
+      });
+      setSyncState('saved','All classrooms loaded ✓');
+    }
+  }
+  _origRenderProcurement();
+};
+
+// ═══════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════
+async function init() {
+  renderClassroomList();
+  updateTopbarClassroom();
+  if (scriptUrl) {
+    const ok = await testConnection();
+    if (ok) await loadClassroomData(currentClassroomId);
+  } else {
+    setSyncState('idle','Not connected — click ⚙ Setup');
+  }
+  renderCalendar();
+}
+
+init();
+</script>
+</body>
+</html>
